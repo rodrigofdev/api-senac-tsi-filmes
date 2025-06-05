@@ -1,0 +1,20 @@
+# Imagem base com JDK 21
+FROM eclipse-temurin:21-jdk-alpine
+
+# Instalar bash, curl, unzip e permissões necessárias para executar o mvnw
+RUN apk add --no-cache bash curl unzip
+
+# Definir diretório de trabalho
+WORKDIR /app
+
+# Copiar os arquivos do projeto
+COPY . .
+
+# Garantir permissão de execução para o mvnw
+RUN chmod +x mvnw
+
+# Baixar as dependências e compilar a aplicação
+RUN ./mvnw -B -DskipTests clean install
+
+# Comando para rodar o app
+CMD ["java", "-jar", "target/quarkus-app/quarkus-run.jar"]
